@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Front-End Developer</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Custom cursor -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+
+  <!-- Decorative spiral path that drifts with scroll -->
+  <div class="spiral-track" id="spiralTrack">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path d="M 50,0 Q 80,25 50,50 T 50,100" />
+    </svg>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="nav">
+    <a href="#" class="logo">
+      <span class="logo-dot"></span>
+      yourname.dev
+    </a>
+    <ul class="nav-links">
+      <li><a href="#work" data-hover>work</a></li>
+      <li><a href="#about" data-hover>about</a></li>
+      <li><a href="#contact" data-hover>contact</a></li>
+      <li><a href="#cv" data-hover>cv ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero spiral-section" data-spiral="0">
+    <div class="hero-meta">Front-End Developer · Available 2026</div>
+    <h1>
+      <span class="line"><span>Building <em class="italic">thoughtful</em></span></span>
+      <span class="line"><span>web interfaces.</span></span>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        I'm <strong>Ali Kashif</strong>, a front-end developer crafting interfaces that move with speed, breathe with intention, and speak in subtle tones. Based in <strong>Islamabad, Pakistan</strong> — working with clients globally.
+      </p>
+      <div class="hero-status">
+        <div class="available">Available for work</div>
+        <div>Booking projects · 2026</div>
+      </div>
+    </div>
+    <div class="scroll-cue">SCROLL</div>
+  </section>
+
+  <!-- Work / Projects -->
+  <section id="work" class="work-section spiral-section" data-spiral="1">
+    <span class="section-badge left">Section 01 / Work</span>
+    <div class="section-header reveal">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Selected <span class="italic">work</span></h2>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="carousel-wrapper" id="carouselWrapper">
+      <div class="carousel" id="carousel">
+        <!-- Project 1 -->
+        <article class="project">
+          <div class="project-media">
+              <div class="play-indicator"></div>
+                <video src="videos/project1.mp4" muted loop autoplay playsinline preload="metadata"></video>
+          </div>
+          <div class="project-meta">
+            <span class="index">— 001</span>
+            <span>2026 / Web</span>
+          </div>
+          <h3>Jakwan International</h3>
+          <p>Gateway to Indonesian Markets & Global Business Consultants</p>
+          <div class="project-tags">
+            <span>AOS</span><span>Canvas API</span>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project">
+           <div class="project-media">
+            <div class="play-indicator"></div>
+              <video src="videos/project2.mp4" muted loop autoplay playsinline preload="metadata"></video>
+          </div>
+          <div class="project-meta">
+            <span class="index">— 002</span>
+            <span>2026 / Brand</span>
+          </div>
+          <h3>Spark Core</h3>
+          <p>The first AI-optimized energy drink engineered for peak human performance.</p>
+          <div class="project-tags">
+            <span>Three.js</span><span>GSAP</span>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="project">
+          <div class="project-media">
+            <div class="play-indicator"></div>
+              <video src="videos/project3.mp4" muted loop autoplay playsinline preload="metadata"></video>
+          </div>
+          <div class="project-meta">
+            <span class="index">— 003</span>
+            <span>2026 / Art</span>
+          </div>
+          <h3>Hallow Aether</h3>
+          <p>An immersive 3D scroll-driven art experience where panels spiral around a glowing central column, with each panel featuring its own unique generative animation that responds to mouse interaction and scroll position.</p>
+          <div class="project-tags">
+            <span>Three.js</span><span>GASP</span>
+          </div>
+        </article>
+
+        <!-- Project 4 -->
+        <article class="project">
+          <div class="project-media">
+            <div class="play-indicator"></div>
+              <video src="videos/project4.mp4" muted loop autoplay playsinline preload="metadata"></video>
+          </div>
+          <div class="project-meta">
+            <span class="index">— 004</span>
+            <span>2026 / Product</span>
+          </div>
+          <h3>Cyber Hunk</h3>
+          <p>Cyber-Punk themed virtual firearms armory website that uses WebGL for 3D weapon models.</p>
+          <div class="project-tags">
+            <span>Vite</span><span>WebGL</span><span>React</span>
+          </div>
+        </article>
+
+        <!-- Project 5 -->
+        <article class="project">
+          <div class="project-media">
+            <div class="play-indicator"></div>
+              <video src="videos/project5.mp4" muted loop autoplay playsinline preload="metadata"></video>
+          </div>
+          <div class="project-meta">
+            <span class="index">— 005</span>
+            <span>2026 / Virtual-Journal</span>
+          </div>
+          <h3>The Forgotten Manuscript</h3>
+          <p>A vintage-styled digital poetry anthology featuring a collection of classical and original poems[custom works] a curator's journal, and a visitor inscription wall where users can leave their own verses.</p>
+          <div class="project-tags">
+            <span>JS</span><span>Google Font</span><span>Transparent Textures CDN</span>
+          </div>
+        </article>
+
+        <!-- Project 6 -->
+        <article class="project">
+          <div class="project-media">
+            <div class="play-indicator"></div>
+              <video src="videos/project6.mp4" muted loop autoplay playsinline preload="metadata"></video>
+          </div>
+          <div class="project-meta">
+            <span class="index">— 006</span>
+            <span>2026 / Product</span>
+          </div>
+          <h3>Elysian Pour</h3>
+          <p>A WebGL-powered 3D interactive art piece where crystalline shard clusters orbit around the user's cursor, representing four "breakable" flavor profiles — users can shatter and reassemble the 3D geometries by clicking or scrolling, with overlapping 2D canvas effects and an ambient dark aesthetic.</p>
+          <div class="project-tags">
+            <span>Three.js</span><span>GSAP</span><span>Web APIs</span>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="carousel-controls reveal">
+      <button class="carousel-btn" id="prevBtn" data-hover aria-label="Previous">←</button>
+      <div class="carousel-progress">
+        <div class="carousel-progress-bar" id="progressBar"></div>
+      </div>
+      <button class="carousel-btn" id="nextBtn" data-hover aria-label="Next">→</button>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="about-section spiral-section" data-spiral="2">
+    <span class="section-badge right">Section 02 / About</span>
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2 class="section-title">About <span class="italic">me</span></h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I craft websites that feel <strong>intention</strong> — interfaces with rhythm, restraint, and deep respect for their users.</p>
+        <p>Carrying a designer's sensibility into development—building clean, performant code that honors the subtleties of loading, feeling, and breathing.</p>
+        <p>At present, I'm honing motion, accessibility, and the understated art of making the web gentler, less cluttered.</p>
+      </div>
+      <div class="skills-block reveal">
+        <h4>Stack & tools</h4>
+        <ul class="skills-list">
+          <li>HTML / CSS <span>fluent</span></li>
+          <li>JavaScript <span>fluent</span></li>
+          <li>React / Next.js <span>daily</span></li>
+          <li>Tailwind CSS <span>learning</span></li>
+          <li>GSAP <span>daily</span></li>
+          <li>Three.js <span>fluent</span></li>
+          <li>Figma → Code <span>learning</span></li>
+          <li>Git / Vercel <span>learning</span></li>
+        </ul>
+        <h4>Disciplines</h4>
+        <ul class="skills-list">
+          <li>Front-End Development <span>core</span></li>
+          <li>UI Implementation <span>core</span></li>
+          <li>Motion / Interaction <span>core</span></li>
+          <li>Performance / Accessibility <span>core</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact-section spiral-section" data-spiral="3">
+    <span class="section-badge left">Section 03 / Contact</span>
+    <div class="contact-grid">
+      <div class="contact-intro reveal">
+        <h2>Have an <span class="italic">idea?</span><br/>Let's build it.</h2>
+        <p>Available for freelance work and select collaborations through 2026. Every message is read with care..</p>
+        <a href="mailto:hello@yourname.dev" class="email-link" data-hover>
+          tscheinx@gmail.com
+          <span class="arrow">↗</span>
+        </a>
+      </div>
+      <form class="contact-form reveal" id="contactForm">
+        <div class="form-group">
+          <label>Your name <span class="req">*</span></label>
+          <input type="text" name="name" required placeholder="Jane Doe" />
+        </div>
+        <div class="form-group">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" name="email" required placeholder="jane@studio.com" />
+        </div>
+        <div class="form-group">
+          <label>Project / Message <span class="req">*</span></label>
+          <textarea name="message" required placeholder="Tell me about what you're working on..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn" data-hover>
+          Send message →
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- CV / Resume -->
+
+  <section id="cv" class="cv-section spiral-section" data-spiral="3">
+    <span class="section-badge right">Section 04 / CV</span>
+    <div class="section-header reveal">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Curriculum <span class="italic">vitae</span></h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="cv-grid">
+      <div class="cv-intro reveal">
+        <p>A concise record of experience, education, and the craft of designing thoughtful, user-centered interfaces.</p>
+        <div class="cv-actions">
+          <a href="cv/Ali-Kashif-CV.pdf" class="email-link" download data-hover>
+            Download CV (PDF)
+            <span class="arrow">↓</span>
+          </a>
+          <a href="cv/Ali-Kashif-CV.pdf" class="cv-view-link" target="_blank" rel="noopener" data-hover>
+            View in browser ↗
+          </a>
+        </div>
+      </div>
+      <div class="cv-meta reveal">
+        <div class="cv-meta-block">
+          <h4>File</h4>
+          <p>Ali-Kashif-CV.pdf</p>
+        </div>
+        <div class="cv-meta-block">
+          <h4>Updated</h4>
+          <p>April 2026</p>
+        </div>
+        <div class="cv-meta-block">
+          <h4>Format</h4>
+          <p>PDF · A4</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>© 2026 Ali Kashif — All rights reserved.</div>
+    <div>Crafted with precision, tempered by care · Last updated 04.2026</div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
