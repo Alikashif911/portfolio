@@ -21,9 +21,9 @@
 
 :root {
   /* Colors */
-  --bg: #1a1d1c;
-  --bg-elevated: #20231f;
-  --bg-card: #242724;
+  --bg: #161e1a;
+  --bg-elevated: #1c2620;
+  --bg-card: #1f2a24;
   --border: rgba(180, 195, 175, 0.08);
   --border-strong: rgba(180, 195, 175, 0.18);
   --text: #e8ebe5;
@@ -180,7 +180,7 @@ nav {
   justify-content: space-between;
   align-items: center;
   backdrop-filter: blur(16px);
-  background: rgba(26, 29, 28, 0.65);
+  background: rgba(22, 30, 26, 0.65);
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease;
 }
