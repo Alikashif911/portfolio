@@ -1128,6 +1128,7 @@ html,body{
   .echo-sub,.echo-cta{font-size:clamp(0.7rem,3vw,0.9rem)}
   .sig{font-size:0.55rem;padding:0 1rem}
   .sig-name{font-size:0.7rem}
+  .p-veil{overflow:hidden}
 }
 @keyframes drip{
   0%{transform:scaleY(0);transform-origin:top}
