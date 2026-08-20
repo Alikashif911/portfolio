@@ -1266,7 +1266,7 @@ class PVeil {
     const N = 9;
     for(let i = 0; i < N; i++){
       this.ribbons.push({
-        baseY: innerHeight * (0.12 + (i / N) * 0.76),
+        baseY: innerHeight * (0.02 + (i / N) * 0.96),
         amplitude: rnd(20, 85),
         freq: rnd(0.0025, 0.007),
         speed: rnd(0.25, 0.75),
