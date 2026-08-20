@@ -1101,6 +1101,34 @@ html,body{
   margin:0.7rem auto 0;
   animation:drip 2s ease-in-out infinite;
 }
+
+/* ── Mobile full-screen fix ─────────────────────────────────────────── */
+@supports(height:100dvh){
+  .panel{height:100dvh}
+  #app{height:100dvh}
+}
+@media(max-width:720px){
+  .panel .content{
+    padding:1.2rem;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    max-height:calc(100dvh - 4rem);
+  }
+  .hero-name{font-size:clamp(2.2rem,12vw,4rem)}
+  .display{font-size:clamp(1.6rem,8vw,3rem)}
+  .eyebrow{font-size:0.6rem}
+  .sub{font-size:clamp(0.75rem,3vw,0.9rem)}
+  .veil-email{font-size:clamp(0.7rem,3.5vw,1.1rem);word-break:break-all}
+  .veil-cv{flex-direction:column;gap:0.6rem}
+  .veil-cv-btn{font-size:0.65rem;padding:0.6rem 1.2rem}
+  .veil-mail-row{flex-wrap:wrap;gap:0.5rem}
+  .veil-socials{font-size:0.6rem;flex-wrap:wrap;justify-content:center}
+  .glitch-stack{font-size:clamp(3rem,16vw,6rem)}
+  .gx{font-size:inherit}
+  .echo-sub,.echo-cta{font-size:clamp(0.7rem,3vw,0.9rem)}
+  .sig{font-size:0.55rem;padding:0 1rem}
+  .sig-name{font-size:0.7rem}
+}
 @keyframes drip{
   0%{transform:scaleY(0);transform-origin:top}
   50%{transform:scaleY(1);transform-origin:top}
