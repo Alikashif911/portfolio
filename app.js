@@ -21,6 +21,7 @@ const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const rnd = (a=1,b) => b===undefined ? Math.random()*a : a + Math.random()*(b-a);
 const TAU = Math.PI * 2;
+function vh(){ return window.visualViewport ? window.visualViewport.height : innerHeight; }
 
 /* ── Lightweight 2D simplex-ish noise (Stefan Gustavson derivative) ──── */
 const Noise = (function(){
@@ -130,7 +131,7 @@ function goTo(i){
   const dur = Math.min(1.15 + (dist - 1) * 0.22, 2.0);
 
   gsap.to(scroller, {
-    y: -i * innerHeight,
+     y: -i * vh(),
     duration: dur,
     ease: 'expo.inOut',
     onComplete: () => {
@@ -182,7 +183,7 @@ addEventListener('touchend', e => {
 
 /* resize — keep current panel aligned */
 addEventListener('resize', () => {
-  gsap.set(scroller, { y: -State.current * innerHeight });
+  gsap.set(scroller, { y: -State.current * vh() });
   panels.forEach(p => p.resize && p.resize());
 });
 
