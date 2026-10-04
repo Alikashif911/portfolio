@@ -22,15 +22,14 @@ const $$ = s => [...document.querySelectorAll(s)];
 const rnd = (a=1,b) => b===undefined ? Math.random()*a : a + Math.random()*(b-a);
 const TAU = Math.PI * 2;
 
-/* Mobile viewport height — visualViewport excludes the collapsing browser
-   address bar, which innerHeight does not. Without this, panel snap drifts
-   on phones as the bar hides/shows. */
-function vh(){ return window.visualViewport ? window.visualViewport.height : innerHeight; }
-
-function setPanelH(){
-  document.documentElement.style.setProperty('--panel-h', vh() + 'px');
+/* Panel height — MEASURED from a real panel rather than guessed from the
+   viewport. CSS sizes panels with 100svh (small viewport height), which
+   stays fixed as the mobile address bar collapses. Measuring means the
+   scroll offset and the panel size can never disagree. */
+function vh(){
+  const p = document.querySelector('.panel');
+  return p ? p.getBoundingClientRect().height : innerHeight;
 }
-setPanelH();
 
 /* ── Lightweight 2D simplex-ish noise (Stefan Gustavson derivative) ──── */
 const Noise = (function(){
@@ -69,6 +68,7 @@ const Noise = (function(){
   }
   return { n2 };
 })();
+
 /* ══════════════════════════════════════════════════════════════════════
    1 · GLOBAL STATE
    ══════════════════════════════════════════════════════════════════════ */
@@ -95,7 +95,7 @@ addEventListener('mousemove', e => {
   State.rawMX = e.clientX;
   State.rawMY = e.clientY;
   State.mouseX = e.clientX / innerWidth;
-  State.mouseY = e.clientY / innerHeight;
+  State.mouseY = e.clientY / vh();
   dot.style.left = e.clientX + 'px';
   dot.style.top  = e.clientY + 'px';
 });
@@ -145,6 +145,8 @@ function goTo(i){
     onComplete: () => {
       State.isAnimating = false;
       cur.classList.remove('scrolling');
+      /* re-seat exactly, in case the viewport shifted mid-tween */
+      gsap.set(scroller, { y: -State.current * vh() });
     }
   });
 
@@ -189,19 +191,21 @@ addEventListener('touchend', e => {
   }
 });
 
-/* resize — keep current panel aligned */
-addEventListener('resize', () => {
-  setPanelH();
+/* keep the current panel aligned whenever the viewport changes */
+function realign(){
+  if(State.isAnimating) return;
   gsap.set(scroller, { y: -State.current * vh() });
+}
+
+addEventListener('resize', () => {
+  realign();
   panels.forEach(p => p.resize && p.resize());
 });
 
-if(window.visualViewport){
-  visualViewport.addEventListener('resize', () => {
-    setPanelH();
-    gsap.set(scroller, { y: -State.current * vh() });
-  });
-}
+addEventListener('orientationchange', () => setTimeout(() => {
+  realign();
+  panels.forEach(p => p.resize && p.resize());
+}, 150));
 
 /* ══════════════════════════════════════════════════════════════════════
    4 · CHROME UPDATES (counter, title, status, tint, spine)
@@ -341,11 +345,12 @@ class PThreshold {
 
   init(){
     const C = HERO_CONFIG;
+    const H = vh();
     const r = this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas, antialias: true, alpha: true
     });
     r.setPixelRatio(Math.min(devicePixelRatio, 2));
-    r.setSize(innerWidth, innerHeight);
+    r.setSize(innerWidth, H);
     r.outputEncoding = THREE.sRGBEncoding;
     r.toneMapping = THREE.ACESFilmicToneMapping;
     r.toneMappingExposure = C.EXPOSURE;
@@ -353,7 +358,7 @@ class PThreshold {
 
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(0x020203, 0.03);
-    this.cam = new THREE.PerspectiveCamera(58, innerWidth/innerHeight, 0.1, 100);
+    this.cam = new THREE.PerspectiveCamera(58, innerWidth/H, 0.1, 100);
     this.cam.position.z = 18;
 
     this.ambient = new THREE.AmbientLight(C.AMBIENT, C.AMBIENT_LEVEL);
@@ -451,7 +456,7 @@ class PThreshold {
   }
 
   toWorld(px, py){
-    const nx = (px/innerWidth)*2 - 1, ny = -(py/innerHeight)*2 + 1;
+    const nx = (px/innerWidth)*2 - 1, ny = -(py/vh())*2 + 1;
     const v = new THREE.Vector3(nx, ny, 0.5).unproject(this.cam);
     const dir = v.sub(this.cam.position).normalize();
     const dist = -this.cam.position.z / dir.z;
@@ -465,8 +470,9 @@ class PThreshold {
   }
 
   resize(){
-    this.renderer.setSize(innerWidth, innerHeight);
-    this.cam.aspect = innerWidth / innerHeight;
+    const H = vh();
+    this.renderer.setSize(innerWidth, H);
+    this.cam.aspect = innerWidth / H;
     this.cam.updateProjectionMatrix();
   }
 
@@ -720,19 +726,21 @@ class PWork {
   resizePixi(){}
   resize(){
     const d = devicePixelRatio || 1;
+    const H = vh();
     this.w = this.c.width = innerWidth * d;
-    this.h = this.c.height = innerHeight * d;
+    this.h = this.c.height = H * d;
     this.c.style.width = innerWidth + 'px';
-    this.c.style.height = innerHeight + 'px';
+    this.c.style.height = H + 'px';
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(d, d);
     this.ctx.fillStyle = '#0a0a0e';
-    this.ctx.fillRect(0,0,innerWidth,innerHeight);
+    this.ctx.fillRect(0, 0, innerWidth, H);
     /* keep the Pixi stage matched to the real card box */
     this.resizePixi();
   }
   initAgents(){
     this.agents = [];
-    const W = innerWidth, H = innerHeight;
+    const W = innerWidth, H = vh();
     for(let i=0;i<820;i++){
       this.agents.push({
         x: rnd(W), y: rnd(H),
@@ -750,7 +758,7 @@ class PWork {
     if(!this.revealed){ this.reveal(); this.revealed = true; }
     /* clear background on activation for a fresh bloom */
     this.ctx.fillStyle = 'rgba(10,10,14,1)';
-    this.ctx.fillRect(0,0,innerWidth,innerHeight);
+    this.ctx.fillRect(0, 0, innerWidth, vh());
     /* resume the current project's video */
     this.playVideo(this.selected);
   }
@@ -787,7 +795,7 @@ class PWork {
     }
 
     const ctx = this.ctx;
-    const W = innerWidth, H = innerHeight;
+    const W = innerWidth, H = vh();
 
     /* trail fade */
     ctx.fillStyle = 'rgba(10,10,14,0.046)';
@@ -869,11 +877,12 @@ class PHollow {
     this.init();
   }
   init(){
+    const H = vh();
     const r = this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas, antialias: true, alpha: true
     });
     r.setPixelRatio(Math.min(devicePixelRatio, 1.8));
-    r.setSize(innerWidth, innerHeight);
+    r.setSize(innerWidth, H);
     r.setClearColor(0, 0);
 
     this.scene = new THREE.Scene();
@@ -881,7 +890,7 @@ class PHollow {
 
     /* narrower FOV + camera pulled back = less off-axis distortion,
        so the sphere reads round even when parked off to the right */
-    this.cam = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 200);
+    this.cam = new THREE.PerspectiveCamera(45, innerWidth/H, 0.1, 200);
     this.cam.position.set(0, 0, 11);
 
     /* Wireframe icosahedron */
@@ -969,8 +978,9 @@ class PHollow {
     this.baseY = OFFSET_Y;
   }
   resize(){
-    this.renderer.setSize(innerWidth, innerHeight);
-    this.cam.aspect = innerWidth / innerHeight;
+    const H = vh();
+    this.renderer.setSize(innerWidth, H);
+    this.cam.aspect = innerWidth / H;
     this.cam.updateProjectionMatrix();
   }
   activate(){
@@ -1067,10 +1077,12 @@ class PCorrupt {
   }
   resize(){
     const d = devicePixelRatio || 1;
+    const H = vh();
     this.c.width = innerWidth * d;
-    this.c.height = innerHeight * d;
+    this.c.height = H * d;
     this.c.style.width = innerWidth + 'px';
-    this.c.style.height = innerHeight + 'px';
+    this.c.style.height = H + 'px';
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(d, d);
   }
   activate(){
@@ -1101,6 +1113,7 @@ class PCorrupt {
   }
   tick(t){
     if(!this.active) return;
+    const H = vh();
 
     /* RGB channel drift */
     const n1 = Noise.n2(t*1.2, 0) * 14;
@@ -1117,11 +1130,11 @@ class PCorrupt {
 
     /* canvas glitch bands */
     const ctx = this.ctx;
-    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    ctx.clearRect(0, 0, innerWidth, H);
 
     /* scan bands */
     for(let i=0;i<5;i++){
-      const y = rnd(innerHeight);
+      const y = rnd(H);
       const h = rnd(1, 4);
       const hue = Math.random() < 0.5 ? 340 : 180;
       ctx.fillStyle = `hsla(${hue}, 90%, 60%, ${rnd(0.08, 0.18)})`;
@@ -1130,7 +1143,7 @@ class PCorrupt {
 
     /* occasional horizontal displacement band */
     if(Math.random() < 0.04){
-      const y = rnd(innerHeight);
+      const y = rnd(H);
       const h = rnd(10, 50);
       ctx.fillStyle = 'rgba(255, 50, 100, 0.12)';
       ctx.fillRect(rnd(-40, 40), y, innerWidth + 80, h);
@@ -1141,7 +1154,7 @@ class PCorrupt {
     for(let i=0;i<count;i++){
       const alpha = rnd(0.1, 0.35);
       ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-      ctx.fillRect(rnd(innerWidth), rnd(innerHeight), 1, 1);
+      ctx.fillRect(rnd(innerWidth), rnd(H), 1, 1);
     }
   }
 }
@@ -1166,17 +1179,20 @@ class PEcho {
   }
   resize(){
     const d = devicePixelRatio || 1;
+    const H = vh();
     this.c.width = innerWidth * d;
-    this.c.height = innerHeight * d;
+    this.c.height = H * d;
     this.c.style.width = innerWidth + 'px';
-    this.c.style.height = innerHeight + 'px';
+    this.c.style.height = H + 'px';
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(d, d);
   }
   initDrifters(){
     this.drifters = [];
+    const H = vh();
     for(let i=0;i<60;i++){
       this.drifters.push({
-        x: rnd(innerWidth), y: rnd(innerHeight),
+        x: rnd(innerWidth), y: rnd(H),
         vx: rnd(-0.06, 0.06), vy: rnd(-0.06, 0.06),
         r: rnd(0.3, 1.4),
         phase: rnd(TAU)
@@ -1200,7 +1216,7 @@ class PEcho {
   tick(t){
     if(!this.active) return;
     const ctx = this.ctx;
-    const W = innerWidth, H = innerHeight;
+    const W = innerWidth, H = vh();
 
     /* gentle fade */
     ctx.fillStyle = 'rgba(10,10,14,0.12)';
@@ -1279,18 +1295,21 @@ class PVeil {
   }
   resize(){
     const d = devicePixelRatio || 1;
+    const H = vh();
     this.c.width = innerWidth * d;
-    this.c.height = innerHeight * d;
+    this.c.height = H * d;
     this.c.style.width = innerWidth + 'px';
-    this.c.style.height = innerHeight + 'px';
+    this.c.style.height = H + 'px';
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(d, d);
   }
   init(){
     this.ribbons = [];
+    const H = vh();
     const N = 9;
     for(let i = 0; i < N; i++){
       this.ribbons.push({
-        baseY: innerHeight * (0.12 + (i / N) * 0.76),
+        baseY: H * (0.12 + (i / N) * 0.76),
         amplitude: rnd(20, 85),
         freq: rnd(0.0025, 0.007),
         speed: rnd(0.25, 0.75),
@@ -1306,7 +1325,7 @@ class PVeil {
     this.dust = [];
     for(let i = 0; i < 90; i++){
       this.dust.push({
-        x: rnd(innerWidth), y: rnd(innerHeight),
+        x: rnd(innerWidth), y: rnd(H),
         vx: rnd(-0.18, 0.18), vy: rnd(-0.06, 0.06),
         r: rnd(0.3, 1.3),
         phase: rnd(TAU)
@@ -1327,7 +1346,7 @@ class PVeil {
   tick(t){
     if(!this.active) return;
     const ctx = this.ctx;
-    const W = innerWidth, H = innerHeight;
+    const W = innerWidth, H = vh();
 
     /* very soft trail fade */
     ctx.fillStyle = 'rgba(10,7,13,0.09)';
@@ -1434,6 +1453,7 @@ if(copyBtn){
 /* initial */
 updateChrome(0);
 panels[0].activate();
+realign();
 
 /* ══════════════════════════════════════════════════════════════════════
    13 · MAIN LOOP
