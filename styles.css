@@ -133,7 +133,7 @@ html,body{
   line-height:0.85;
   padding:0 0.3em 0.2em;                 /* room so the 'f' never clips */
   background:linear-gradient(110deg,
-    rgba(200,204,210,0.85) 30%, #ffffff 50%, rgba(200,204,210,0.85) 70%);
+    rgba(248,249,252,0.92) 30%, #ffffff 50%, rgba(248,249,252,0.92) 70%);
   background-size:200% auto;
   -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;color:transparent;
@@ -171,7 +171,7 @@ html,body{
   font-size:clamp(0.9rem,1.1vw,1.05rem);
   line-height:1.5;
   letter-spacing:0.03em;
-  color:rgba(210,214,220,0.75);
+  color:rgba(245,247,250,0.92);
   pointer-events:none;
   opacity:0;
 }
@@ -195,8 +195,9 @@ html,body{
 .p-work .flow-canvas{position:absolute;inset:0;z-index:1;opacity:0.5}
 .p-work .side-title{
   position:absolute;z-index:2;
-  top:4vh;right:3rem;
-  height:92vh;
+  top:50%;right:2rem;
+  transform:translateY(-50%);
+  height:auto;
   writing-mode:vertical-rl;
   text-orientation:mixed;
   font-family:var(--serif);
@@ -347,6 +348,12 @@ html,body{
   transition:letter-spacing .4s ease;
 }
 .p-work .work-detail-cta:hover{letter-spacing:0.42em}
+.p-work .work-detail-cta:hover{letter-spacing:0.42em}
+.p-work .work-detail-cta.is-hidden{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
 
 /* ════════════════════════════════════════════════════════════════════
    P 3 — HOLLOW BODIES
@@ -1100,35 +1107,6 @@ html,body{
   background:linear-gradient(to bottom,transparent,var(--paper-faint),transparent);
   margin:0.7rem auto 0;
   animation:drip 2s ease-in-out infinite;
-}
-
-/* ── Mobile full-screen fix ─────────────────────────────────────────── */
-@supports(height:100dvh){
-  .panel{height:100dvh}
-  #app{height:100dvh}
-}
-@media(max-width:720px){
-  .panel .content{
-    padding:1.2rem;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-    max-height:calc(100dvh - 4rem);
-  }
-  .hero-name{font-size:clamp(2.2rem,12vw,4rem)}
-  .display{font-size:clamp(1.6rem,8vw,3rem)}
-  .eyebrow{font-size:0.6rem}
-  .sub{font-size:clamp(0.75rem,3vw,0.9rem)}
-  .veil-email{font-size:clamp(0.7rem,3.5vw,1.1rem);word-break:break-all}
-  .veil-cv{flex-direction:column;gap:0.6rem}
-  .veil-cv-btn{font-size:0.65rem;padding:0.6rem 1.2rem}
-  .veil-mail-row{flex-wrap:wrap;gap:0.5rem}
-  .veil-socials{font-size:0.6rem;flex-wrap:wrap;justify-content:center}
-  .glitch-stack{font-size:clamp(3rem,16vw,6rem)}
-  .gx{font-size:inherit}
-  .echo-sub,.echo-cta{font-size:clamp(0.7rem,3vw,0.9rem)}
-  .sig{font-size:0.55rem;padding:0 1rem}
-  .sig-name{font-size:0.7rem}
-  .p-veil{overflow:hidden}
 }
 @keyframes drip{
   0%{transform:scaleY(0);transform-origin:top}

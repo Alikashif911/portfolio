@@ -21,6 +21,10 @@ const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const rnd = (a=1,b) => b===undefined ? Math.random()*a : a + Math.random()*(b-a);
 const TAU = Math.PI * 2;
+
+/* Mobile viewport height — visualViewport excludes the collapsing browser
+   address bar, which innerHeight does not. Without this, panel snap drifts
+   on phones as the bar hides/shows. */
 function vh(){ return window.visualViewport ? window.visualViewport.height : innerHeight; }
 
 /* ── Lightweight 2D simplex-ish noise (Stefan Gustavson derivative) ──── */
@@ -131,7 +135,7 @@ function goTo(i){
   const dur = Math.min(1.15 + (dist - 1) * 0.22, 2.0);
 
   gsap.to(scroller, {
-     y: -i * vh(),
+    y: -i * vh(),
     duration: dur,
     ease: 'expo.inOut',
     onComplete: () => {
@@ -551,17 +555,17 @@ class PThreshold {
    Missing/broken video → the stage shows a gradient fallback, nothing breaks.
    ────────────────────────────────────────────────────────────────────── */
 const WORK_DATA = [
-  { name: 'Daud Khan',                 idx: '01 / 06', url: '#',
+  { name: 'Al Dubai Scents',          idx: '01 / 06', url: 'https://aldubaiscents.com',
+    video: 'videos/al-dubai-scents.mp4', grad: ['#120d08','#C9A24B'],
+    desc: 'Live Shopify storefront for a fragrance brand — custom theme styling, product and collection pages, and a mobile-first checkout flow.' },
+  { name: 'Daud Khan',                 idx: '02 / 06', url: '#',
     video: 'videos/daud-khan.mp4',    grad: ['#1a1a1a','#E8FF00'],
     desc: 'Scroll-animated video editor portfolio — timeline services section, horizontal video carousel, and integrated booking calendar.' },
-  { name: 'Nayab Khattak',            idx: '02 / 06', url: '#',
+  { name: 'Nayab Khattak',            idx: '03 / 06', url: '#',
     video: 'videos/nayab-khattak.mp4', grad: ['#1a1410','#B8935A'],
     desc: 'Chemistry tutor portfolio with a periodic-table class grid, molecule SVG hero, scroll animations, and enrollment form.' },
-  { name: 'Éthéreal',                 idx: '03 / 06', url: '#',
-    video: 'videos/éthéreal.mp4',  grad: ['#FAF7F2','#C9937A'],
-    desc: 'Haute parfumerie storefront — CSS-crafted bottle, collection grid, tiered pricing, and an ivory-rose editorial palette.' },
   { name: 'Jakwan International',      idx: '04 / 06', url: '#',
-    video: 'videos/jakwan.mp4',    grad: ['#1a2b4a','#4a7bc8'],
+    video: 'videos/jakwan-international.mp4', grad: ['#1a2b4a','#4a7bc8'],
     desc: 'Corporate presence built on a GSAP + Lenis + Three.js stack — smooth-scrolled, animation-first, calm under motion.' },
   { name: 'The Forgotten Manuscript', idx: '05 / 06', url: '#',
     video: 'videos/forgotten-manuscript.mp4', grad: ['#2a2416','#c8b060'],
@@ -570,6 +574,7 @@ const WORK_DATA = [
     video: 'videos/elysian-pour.mp4', grad: ['#1a0a2a','#9b6ac8'],
     desc: 'Cinematic Three.js storefront with a product slideshow and ScrollTrigger-choreographed camera work.' }
 ];
+
 
 class PWork {
   constructor(el){
@@ -652,10 +657,12 @@ class PWork {
         if(url && url !== '#') window.open(url, '_blank');
       });
     });
-    this.detail.cta.addEventListener('click', () => {
-      const url = WORK_DATA[this.selected].url;
-      if(url && url !== '#') window.open(url, '_blank');
-    });
+    if(this.detail.cta){
+      this.detail.cta.addEventListener('click', () => {
+        const url = WORK_DATA[this.selected].url;
+        if(url && url !== '#') window.open(url, '_blank');
+      });
+    }
     /* clicking the video stage opens the live project */
     if(this.stage){
       this.stage.addEventListener('click', e => {
@@ -670,6 +677,11 @@ class PWork {
     this.selected = i;
     this.items.forEach(el => el.classList.toggle('is-active', +el.dataset.idx === i));
     const d = WORK_DATA[i];
+
+    /* CTA only shown for projects with a real live URL */
+    if(this.detail.cta){
+      this.detail.cta.classList.toggle('is-hidden', !(d.url && d.url !== '#'));
+    }
 
     /* native video crossfade */
     this.switchVideo(i);
@@ -1266,7 +1278,7 @@ class PVeil {
     const N = 9;
     for(let i = 0; i < N; i++){
       this.ribbons.push({
-        baseY: innerHeight * (i / N),
+        baseY: innerHeight * (0.12 + (i / N) * 0.76),
         amplitude: rnd(20, 85),
         freq: rnd(0.0025, 0.007),
         speed: rnd(0.25, 0.75),
