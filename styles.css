@@ -80,7 +80,7 @@ html,body{
   transform:translate3d(0,0,0);
 }
 .panel{
-  position:relative;width:100vw;height:100dvh;
+  position:relative;width:100vw;height:var(--panel-h,100dvh);
   overflow:hidden;
   display:flex;flex-direction:column;
   isolation:isolate;
