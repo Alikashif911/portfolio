@@ -755,7 +755,7 @@ html,body{
 .p-veil .veil-socials a:hover{color:var(--accent)}
 .p-veil .veil-socials .dot{color:var(--paper-faint);margin:0 0.8rem}
 .p-veil .veil-loc{
-  color:var(--paper-faint);
+  color:var(--paper-dim);
   text-transform:none;
   letter-spacing:0.12em;
   font-size:0.58rem;
