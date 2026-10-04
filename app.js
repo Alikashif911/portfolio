@@ -27,6 +27,11 @@ const TAU = Math.PI * 2;
    on phones as the bar hides/shows. */
 function vh(){ return window.visualViewport ? window.visualViewport.height : innerHeight; }
 
+function setPanelH(){
+  document.documentElement.style.setProperty('--panel-h', vh() + 'px');
+}
+setPanelH();
+
 /* ── Lightweight 2D simplex-ish noise (Stefan Gustavson derivative) ──── */
 const Noise = (function(){
   const p = new Uint8Array(512);
@@ -64,7 +69,6 @@ const Noise = (function(){
   }
   return { n2 };
 })();
-
 /* ══════════════════════════════════════════════════════════════════════
    1 · GLOBAL STATE
    ══════════════════════════════════════════════════════════════════════ */
@@ -187,9 +191,17 @@ addEventListener('touchend', e => {
 
 /* resize — keep current panel aligned */
 addEventListener('resize', () => {
+  setPanelH();
   gsap.set(scroller, { y: -State.current * vh() });
   panels.forEach(p => p.resize && p.resize());
 });
+
+if(window.visualViewport){
+  visualViewport.addEventListener('resize', () => {
+    setPanelH();
+    gsap.set(scroller, { y: -State.current * vh() });
+  });
+}
 
 /* ══════════════════════════════════════════════════════════════════════
    4 · CHROME UPDATES (counter, title, status, tint, spine)
